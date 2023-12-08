@@ -3,27 +3,27 @@
 
 # Importing the Dog vs Cat Dataset from Kaggle
 
-# In[ ]:
+# In[1]:
 
 
 # installing the Kaggle library
 get_ipython().system('pip install kaggle')
 
 
-# In[ ]:
+# In[2]:
 
 
 # Kaggle api
 get_ipython().system('kaggle competitions download -c dogs-vs-cats')
 
 
-# In[ ]:
+# In[3]:
 
 
 get_ipython().system('ls')
 
 
-# In[ ]:
+# In[4]:
 
 
 # extracting the compressed dataset
@@ -36,7 +36,7 @@ with ZipFile(dataset, 'r') as zip:
   print('The dataset is extracted')
 
 
-# In[ ]:
+# In[5]:
 
 
 # extracting the compressed dataset
@@ -49,7 +49,7 @@ with ZipFile(dataset, 'r') as zip:
   print('The dataset is extracted')
 
 
-# In[ ]:
+# In[6]:
 
 
 import os
@@ -61,7 +61,7 @@ print('Number of images: ', file_count)
 
 # Printing the name of images
 
-# In[ ]:
+# In[7]:
 
 
 file_names = os.listdir('/content/train/')
@@ -70,7 +70,7 @@ print(file_names)
 
 # Importing the Dependencies
 
-# In[ ]:
+# In[8]:
 
 
 import numpy as np
@@ -83,7 +83,7 @@ from google.colab.patches import cv2_imshow
 
 # Displaying the images of dogs and cats
 
-# In[ ]:
+# In[9]:
 
 
 # display dog image
@@ -92,7 +92,7 @@ imgplt = plt.imshow(img)
 plt.show()
 
 
-# In[ ]:
+# In[10]:
 
 
 # display cat image
@@ -101,7 +101,7 @@ imgplt = plt.imshow(img)
 plt.show()
 
 
-# In[ ]:
+# In[11]:
 
 
 file_names = os.listdir('/content/train/')
@@ -112,7 +112,7 @@ for i in range(5):
   print(name[0:3])
 
 
-# In[ ]:
+# In[12]:
 
 
 file_names = os.listdir('/content/train/')
@@ -136,14 +136,14 @@ print('Number of cat images =', cat_count)
 
 # Resizing all the images
 
-# In[ ]:
+# In[14]:
 
 
 #creating a directory for resized images
 os.mkdir('/content/image resized')
 
 
-# In[ ]:
+# In[15]:
 
 
 original_folder = '/content/train/'
@@ -162,7 +162,7 @@ for i in range(2000):
   img.save(newImgPath)
 
 
-# In[ ]:
+# In[16]:
 
 
 # display resized dog image
@@ -171,7 +171,7 @@ imgplt = plt.imshow(img)
 plt.show()
 
 
-# In[ ]:
+# In[17]:
 
 
 # display resized cat image
@@ -186,7 +186,7 @@ plt.show()
 # 
 # Dog --> 1
 
-# In[ ]:
+# In[18]:
 
 
 # creaing a for loop to assign labels
@@ -207,21 +207,21 @@ for i in range(2000):
     labels.append(0)
 
 
-# In[ ]:
+# In[19]:
 
 
 print(filenames[0:5])
 print(len(filenames))
 
 
-# In[ ]:
+# In[20]:
 
 
 print(labels[0:5])
 print(len(labels))
 
 
-# In[ ]:
+# In[21]:
 
 
 # counting the images of dogs and cats out of 2000 images
@@ -232,14 +232,14 @@ print(counts)
 
 # Converting all the resized images to numpy arrays
 
-# In[ ]:
+# In[22]:
 
 
 import cv2
 import glob
 
 
-# In[ ]:
+# In[23]:
 
 
 image_directory = '/content/image resized/'
@@ -252,25 +252,25 @@ files = []
 dog_cat_images = np.asarray([cv2.imread(file) for file in files])
 
 
-# In[ ]:
+# In[24]:
 
 
 print(dog_cat_images)
 
 
-# In[ ]:
+# In[25]:
 
 
 type(dog_cat_images)
 
 
-# In[ ]:
+# In[26]:
 
 
 print(dog_cat_images.shape)
 
 
-# In[ ]:
+# In[27]:
 
 
 X = dog_cat_images
@@ -279,13 +279,13 @@ Y = np.asarray(labels)
 
 # **Train Test Split**
 
-# In[ ]:
+# In[28]:
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=2)
 
 
-# In[ ]:
+# In[29]:
 
 
 print(X.shape, X_train.shape, X_test.shape)
@@ -304,7 +304,7 @@ X_train_scaled = X_train/255
 X_test_scaled = X_test/255
 
 
-# In[ ]:
+# In[30]:
 
 
 print(X_train_scaled)
@@ -312,14 +312,14 @@ print(X_train_scaled)
 
 # **Building the Neural Network**
 
-# In[ ]:
+# In[31]:
 
 
 import tensorflow as tf
 import tensorflow_hub as hub
 
 
-# In[ ]:
+# In[32]:
 
 
 mobilenet_model = 'https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4'
@@ -327,7 +327,7 @@ mobilenet_model = 'https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vec
 pretrained_model = hub.KerasLayer(mobilenet_model, input_shape=(224,224,3), trainable=False)
 
 
-# In[ ]:
+# In[34]:
 
 
 num_of_classes = 2
@@ -342,7 +342,7 @@ model = tf.keras.Sequential([
 model.summary()
 
 
-# In[ ]:
+# In[36]:
 
 
 model.compile(
@@ -352,13 +352,13 @@ model.compile(
 )
 
 
-# In[ ]:
+# In[37]:
 
 
 model.fit(X_train_scaled, Y_train, epochs=5)
 
 
-# In[ ]:
+# In[38]:
 
 
 score, acc = model.evaluate(X_test_scaled, Y_test)
@@ -368,7 +368,7 @@ print('Test Accuracy =', acc)
 
 # **Predictive System**
 
-# In[ ]:
+# In[39]:
 
 
 input_image_path = input('Path of the image to be predicted: ')
@@ -398,7 +398,7 @@ else:
   print('The image represents a Dog')
 
 
-# In[ ]:
+# In[40]:
 
 
 input_image_path = input('Path of the image to be predicted: ')
